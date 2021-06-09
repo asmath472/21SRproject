@@ -30,8 +30,19 @@ budget_group_ratings <- joined_grouped %>%
                         group_by(budget_group) %>%
                         summarise(mean_rating = mean(average_rating))
 
+
 joined_filtered <- joined %>%
-                    filter(budget < 1e+07)
+                    filter(budget < 5e+07)
+f1 <- formula(joined_filtered$average_rating~joined_filtered$budget)
+f2 <- formula(joined_filtered$average_rating~joined_filtered$budget + I(joined_filtered$budget^2))
+f3 <- formula(joined_filtered$average_rating~joined_filtered$budget + I(joined_filtered$budget^2) + I(joined_filtered$budget^3))
+
+summary(lm(formula = f1))
+summary(lm(formula = f2))
+summary(lm(formula = f3))
+
+ggplot(joined_filtered, aes(budget,average_rating)) + geom_point() + geom_smooth()
+
 plot(joined_filtered$budget, joined_filtered$average_rating)
 
 joined_point <- joined %>%
